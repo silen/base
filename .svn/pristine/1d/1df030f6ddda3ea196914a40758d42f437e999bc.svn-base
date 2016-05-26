@@ -1,0 +1,92 @@
+<extend name="Public/base"/>
+
+
+<block name="nav">
+    <div class="am-cf am-padding">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">设置</strong>
+
+        </div>
+    </div>
+
+</block>
+<block name="body">
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <form class="am-form am-form-horizontal">
+                <section class="am-panel am-panel-default">
+                    <header class="am-panel-hd">
+                        <h3 class="am-panel-title">摇一摇</h3>
+                    </header>
+                    <div class="am-panel-bd">
+                        <div class="am-form-group">
+                            <label>客户端连接 :</label>
+                            <span><a href="{$Think.ROOT_HOST}act/p2/shake.html" target="_blank">{$Think.ROOT_HOST}act/p2/shake.html</a> </span>
+                        </div>
+                        <div class="am-form-group">
+                            <label>服务端连接 :</label>
+                            <span><a href="{$Think.ROOT_HOST}act/p2/shakeview.html" target="_blank">{$Think.ROOT_HOST}act/p2/shakeview.html</a> </span>
+                        </div>
+                        <div class="am-form-group">
+                            <label>已摇动的次数 :</label>
+                            <span>{$shakeAllcount}次</span>
+                            <span><a href="javascript:void(0);" onclick="cleanCount()">清除</a> </span>
+                        </div>
+                        <div class="am-form-group">
+                            <label>次数</label>
+                            <input type="number" name="shakecount" class="" value="{$shakecount}" placeholder="总数">
+                        </div>
+                        <div class="am-form-group">
+                            <label>作弊次数(每秒)</label>
+                            <input type="number" name="cheatcount" class="" value="{$cheatcount}" placeholder="总数">
+                        </div>
+                        <div class="am-form-group">
+                            <label>开始时间</label>
+                            <input type="text" value="{$starttime|date='Y-m-d H:i',###}" name="starttime" id="datetimepicker" class="am-form-field">
+                        </div>
+                        <div class="am-form-group">
+                            <button type="button" class="am-btn am-btn-primary" onclick="addData($('.am-form'))">保存</button>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+            </form>
+        </div>
+
+    </div>
+</block>
+<block name="script">
+    <script>
+        $(function () {
+
+            $('#datetimepicker').datetimepicker({
+                format: 'yyyy-mm-dd hh:ii'
+            });
+        })
+        function cleanCount() {
+            if (confirm('是否清除摇动的次数')) {
+                $.post("{$Think.ROOT_HOST}index.php?m={$Think.MODULE_NAME}&c={$Think.CONTROLLER_NAME}&a=cleanCount", function (json) {
+
+                    alert('清除成功')
+                    window.location.reload()
+                }, 'json');
+                return false;
+            }
+
+        }
+        function addData(obj) {
+            $.post("{$Think.ROOT_HOST}index.php?m={$Think.MODULE_NAME}&c={$Think.CONTROLLER_NAME}&a={$Think.ACTION_NAME}", obj.serialize(), function (json) {
+                if (!json.s) {
+                    alert(json.error)
+                    return false;
+                }
+                alert('保存成功')
+                window.location.reload()
+            }, 'json');
+            return false;
+        }
+    </script>
+</block>

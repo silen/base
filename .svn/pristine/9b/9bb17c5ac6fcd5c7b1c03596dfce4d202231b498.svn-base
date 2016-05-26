@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="x-dns-prefetch-control" content="on"/>
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="format-detection" content="address=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="keywords" content="书香岭南最美阅读" />
+    <meta name="description" content="书香岭南最美阅读" />
+    <title>书香岭南最美阅读</title>
+    <style>
+    *{margin:0;padding:0}
+    body { background: url(./img/bg.jpg) no-repeat #030b11; background-size:100%; font-size:100%; font-family: tahoma, arial, Hiragino Sans GB, WenQuanYi Micro Hei, \5FAE\8F6F\96C5\9ED1, \5B8B\4F53, sans-serif; }
+    .shake_icon { width: 2.06rem; height: 2.67rem; position: absolute; left: 50%; top: 50%; margin:-1.33rem 0 0 -1.03rem; background: url(./img/shake.png) no-repeat; background-size: 100%; transition:0.2s; -webkit-tranform:0.2s;}
+    .rotate_back {transform:rotate(-30deg); -webkit-transform:rotate(-30deg);}
+    .my_con { position: absolute; left: 0; width: 6.4rem; top:50%; margin-top: 2.2rem; text-align: center; color:#fff;  font-size: .5rem; font-family: "华文中宋";}
+    .my_con_time { color:#ffcc33;  font-size: .83rem; margin:0 .1rem;}
+    .shake_title{ color: #FFF; position: absolute; left: 0; width: 6.4rem; top: 2.4rem; font-size: .48rem; font-family: Arial; text-align: center;}
+    .shake_title span{ margin:0 .5rem;}
+    </style>
+    <script type="text/javascript" src="./js/jquery.js"></script>
+</head>
+<body>
+
+
+    <!-- 摇一摇界面 -->
+    <h1 class="shake_title"><span>书香岭南</span><span>最美阅读</span></h1>
+    <div class="shake_icon" id="J_shakePhone"></div>
+     <p class="my_con">我已贡献出<span class="my_con_time" id="J_shakingTime">0</span>瓦能量</p>
+
+    <script>
+    var Shaking = {
+        //是否正在执行动画
+        animating : false,
+
+        //获取是否已达到目标摇动次数请求地址
+        ajaxApi : '',
+
+        //是否已达到目标摇动次数
+        isReach : false,
+
+        //用户摇动次数
+        shakeTime : 0,
+
+        //轮询指针
+        intervalTimer : null,
+
+        //摇动的速度
+        speed : 25,
+
+        lastX : 0,
+        lastY : 0,
+        lastZ : 0,
+
+        /*
+         * 初始化
+         */
+        init : function () {
+            var self = this;
+
+                //self.sceneSwitch(2);
+                self.bindShake(1);
+                
+                self.intervalTimer = setInterval(function () {
+                    self.intervaler();
+                }, 1000);
+
+            self.shakingPhone = $('#J_shakePhone');
+            self.shakingNumber = $('#J_shakingTime');
+        },
+
+        /*
+         * 轮询
+         */
+        intervaler : function () {
+            var self = this;
+
+            //达到目标摇动次数
+            if (self.isReach) {
+                //清除定时轮询
+                clearInterval(self.intervalTimer);
+
+                //停止摇动
+                self.bindShake(0);
+
+                //显示结果
+                //self.sceneSwitch(3);
+            }
+            //未达到目标摇动次数
+            else {
+                //请求是否已达到目标摇动次数
+                self.getIsReach();
+            }
+        },
+
+        /*
+         * 摇动事件
+         */
+        deviceMotionHandler : function (e) {
+            var self = Shaking;
+
+            //获取含重力加速
+            var acceleration = e.accelerationIncludingGravity;
+
+            var x = acceleration.x;//获取加速度X方向
+            var y = acceleration.y;//获取加速度Y方向
+            var z = acceleration.z;//获取加速度Y方向
+
+
+            if(Math.abs(x - self.lastX) > self.speed 
+            || Math.abs(y - self.lastY) > self.speed ) {
+                self.shakeTime++;
+
+                self.anim();
+            }
+
+            self.lastX = x;
+            self.lastY = y;
+            self.lastZ = z;
+        },
+
+        /*
+         * 摇动动画效果
+         */
+        anim : function () {
+            var self = this;
+
+            if (self.shakingPhone.hasClass('rotate_back')) {
+                self.shakingPhone.removeClass('rotate_back');
+            }
+            else {
+                self.shakingPhone.addClass('rotate_back');
+            }
+            if(window.isReach){
+                self.bindShake(0);
+                //显示结果
+                self.sceneSwitch(3);
+                return false;
+            }
+            $.getJSON("/index.php?m=api&c=p2&a=shake&jsoncallback=?", function(e){
+                if (!e.state && e.info == 'count'){
+                    window.isReach = true;
+                    $('#J_result').html(e.num)
+                } else if(e.state) {
+                    self.shakingNumber.html(e.num);
+                } else if (e.info == 'time') {
+                    alert('活动未开始');
+                }
+
+            });
+        },
+
+        /*
+         * 请求获取是否已达到目标总摇动次数
+         */
+        getIsReach : function () {
+            var self = this;
+            $.ajax({
+                url : self.ajaxApi,
+                dataType : 'json',
+                success : function (re) {
+                    self.isReach = re.isReach;
+                }
+            });
+        },
+
+        /*
+         * 摇动事件绑定及解绑
+         */
+        bindShake : function (type) {
+            var self = this;
+            if (type) {
+                window.addEventListener('devicemotion', self.deviceMotionHandler, false);
+            }
+            else {
+                window.removeEventListener('devicemotion', self.deviceMotionHandler, false);
+            }
+        },
+
+        /*
+         * 场景切换
+         */
+        sceneSwitch : function (scene) {
+            var self = this;
+
+            $('.J_scene').addClass('hidden');
+            switch (scene) {
+                case 2 :
+                    $('#J_shaking').removeClass('hidden');
+                    break;
+                case 3 :
+                    $('#J_end').removeClass('hidden');
+                    $('#J_result').html(self.shakeTime);
+                    break;
+                default :
+                    $('#J_start').removeClass('hidden');
+                    break;
+            }
+        }
+    };
+      var root = document.getElementsByTagName('html')[0],
+          NATIVE_W = 640;
+      function updateSize() {
+          var w = document.documentElement.clientWidth;
+          w > 640 ? w=640 : w = w;
+          var cw = w / (NATIVE_W / 100);
+          root.style.fontSize = cw + 'px';
+      };
+      window.onload = updateSize;
+      window.onresize = updateSize;
+    $(function () {
+        Shaking.init();
+    });
+    </script>
+</body>
+</html>

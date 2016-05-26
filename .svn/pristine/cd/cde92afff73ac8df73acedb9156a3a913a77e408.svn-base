@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="x-dns-prefetch-control" content="on"/>
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="format-detection" content="address=no"/>
+    <meta name="viewport" content="width=device-width,minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="keywords" content="书香岭南最美阅读" />
+    <meta name="description" content="书香岭南最美阅读" />
+    <title>书香岭南最美阅读</title>
+    <script src="./js/jquery.js"></script>
+    <style>
+        body, html {width:100%; height:100%;}
+        body { background: #030b11 url(./img/index.jpg); background-size:100%; font-size:100%; padding: 0; margin: 0;}
+        .hidden { display: none; }
+
+        .led_process {text-align: center; height:100%;}
+
+        .led_process {color:#fff; font-size: 3rem; position: relative;}
+
+        .big_light {
+            background-image: -webkit-radial-gradient(10% circle, rgba(255, 241, 25, .85),rgba(0, 0, 0, 0));
+            background-image: radial-gradient(10% circle, rgba(255, 241, 25, .85),rgba(0, 0, 0, 0));
+            -webkit-transition:all 0.2s linear;
+            transition:all 0.2s linear;
+            position: absolute;
+            top:-50%;
+            left:0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+        }
+        .star {
+            background-image: -webkit-radial-gradient(10% circle, rgba(255, 241, 25, .9),rgba(0, 0, 0, 0));
+            background-image: radial-gradient(10% circle, rgba(255, 241, 25, .9),rgba(0, 0, 0, 0));
+            -webkit-transition:all 0.2s linear;
+            transition:all 0.2s linear;
+            position: absolute;
+            width:1%;
+            height:3%;
+            top:30px;
+            left:20px;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        .shinning {
+            -webkit-animation-name:_translate;
+            animation-name:_translate;
+            -webkit-animation-duration: 0.8s;
+            animation-duration: 0.8s;
+            -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+            -webkit-animation-iteration-count: 1;
+            animation-iteration-count: 1;
+            -webkit-animation-delay:0.2s;
+            animation-delay:0.2s;
+            -webkit-animation-fill-mode:forwards;
+            animation-fill-mode:forwards;
+        }
+        .star_scale {
+            width:3%;
+            height:5%;
+        }
+
+        @-webkit-keyframes _translate {
+            99% {
+                top:3rem;
+                left:13rem;
+                opacity: 1;
+            }
+            100% {
+                top:3rem;
+                left:13rem;
+                opacity: 0;
+            }
+        }
+        .led_joinus { width:100%; height:100%; background: url(./img/led_index.jpg) no-repeat center center; background-size: 100%; }
+        .join_us {color:#10b46e; font-size: 3.5rem; line-height: 5rem; font-weight: bolder; font-style: italic; width:80%; margin: 0 auto;}
+        .shake_phone {display: inline-block; background: url(./img/shake.png) no-repeat center center; background-size: 100%;}
+        .join_us img { height:5rem; margin: 0 1.5rem;}
+        .end_text {font-size: 3rem; color:#ffcc33; font-weight: bold; font-style: italic;}
+        .led_index {width:100%; height:100%; background: url(./img/index.jpg) no-repeat center center; background-size: 100%;}
+        .light_con{
+            position: absolute;
+            right: 3rem;
+            width: 6.3rem;
+            top: 2.4rem;
+            height: 7.6rem;
+        }
+        .led_dulb{
+             position: absolute;
+             top: 0;
+             left: 50%;
+             width: 4.4rem;
+             height: 5.6rem;
+             background:url(./img/dulb.png) no-repeat;
+             background-size: 100%;
+             margin-left: -2.2rem;
+        }
+        .light_layer {
+            position: absolute; top:-.5rem; width:5rem; left: 50%; z-index: 2; margin-left:-2.5rem; height: 5rem; opacity: 0;
+            /*background-image: radial-gradient(60px circle,hsla(60,98.8%,66.5%,1),hsla(210,11.1%,3.5%,.5));*/
+            -webkit-transition:all 0.2s linear;
+            transition:all 0.2s linear;
+        }
+        .led_title{
+            position: absolute; left: 0; width: 19.2rem; text-align: center; font-size: .75rem; color: #FFF; top: .8rem;
+            line-height: .8rem;
+        }
+        .led_title span{
+            margin:0 .8rem;
+        }
+        .led_code{
+            position: absolute;
+            left: 3rem; top: 3rem;
+            width: 5.01rem;
+            height: 6.84rem;
+            background:url(./img/code.png);
+            background-size: 100%;
+        }
+        #J_processText{
+            position: absolute;
+            left: 0;
+            text-align: center;
+            width: 100%;
+            bottom:0;
+            color: #FFF;
+            font-size: .54rem;
+            font-family: "华文仿宋";
+            line-height: .9rem; 
+        }
+        .shaking_num, .shaking_percent {color:#ffcc33; font-weight: bold;}
+        .led_pro_fir{
+            font-size: .83rem;font-weight: bold;
+        }
+        *{
+            padding:0; margin:0;
+        }
+        .shaking_num {font-size: .83rem;}
+
+    </style>
+</head>
+<body>
+<!-- 开启按钮界面 -->
+<div class="led_joinus" id="J_start"></div>
+
+<!-- 进度界面 -->
+<div class="led_process hidden" id="J_processBox">
+    <h1 class="led_title"><span>书香岭南</span><span>最美阅读</span></h1>
+
+    <div class="led_code"></div>
+
+    <div class="light_con">
+         <div class="led_dulb" id="J_ledDulb"></div>
+        <div class="light_layer J_layer"></div>
+        <div class="light_layer J_layer"></div>
+
+        <div id="J_processText">
+            <p class="led_pro_fir">已摇&nbsp;<span class="shaking_num" id="J_shakingNumber">0</span>&nbsp;次</p>
+            <p class="led_pro_sec">共聚集 <span class="shaking_percent"><span id="J_shakingPercent">0</span>%</span> 的能量</p>
+        </div>  
+    </div>
+
+
+   
+
+<!--     <p class="end_text hidden" id="J_endText">创无止境，投你所爱</p> -->
+<!--     <div class="big_light" id="J_shinningLight"></div> -->
+
+</div>
+
+<!-- 主屏幕 -->
+<div class="led_index hidden" id="J_index"></div>
+<script>
+window.curProcess = {
+    curTime : 0, curPercent : 0, isReach : false
+}
+var Led = {
+    //轮询指针
+    intervalTimer : null,
+
+    //请求数据地址
+    ajaxApi : '',
+
+    //执行进度动画的上一次进度
+    lastProcess : {
+        curTime : 0,
+        curPercent : 0,
+        isReach : false
+    },
+
+    //当前进度
+    curProcess : {
+        curTime : 0,
+        curPercent : 0,
+        isReach : false
+    },
+
+    //总摇动次数
+    shakingNumber : null,
+
+    //进度百分比
+    shakingPercent : null,
+
+    //灯光
+    shinningLight : null,
+
+    //结束后跳转页面地址
+    endJump : '',
+
+    /*
+     * 初始化
+     */
+    init : function () {
+        var self = this;
+
+        $(document).on('keyup', self.switcher);
+
+        // $('#J_start').on('click', function () {
+        //     $('#J_start').addClass('hidden');
+        //     $('#J_processBox').removeClass('hidden');
+        //     self.intervalTimer = setInterval(function () {
+        //         self.intervaler();
+        //     }, 1000);
+        // });
+
+        self.shakingNumber = $('#J_shakingNumber');
+        self.shakingPercent = $('#J_shakingPercent');
+        self.shinningLight = $('.J_shinningLight');
+    },
+
+    /*
+     * 切换到灯泡事件
+     */
+    switcher : function (e) {
+        var self = Led;
+
+        if (e.keyCode == 32) {
+            $('#J_start').addClass('hidden');
+            $('#J_processBox').removeClass('hidden');
+            self.intervalTimer = setInterval(function () {
+                self.intervaler();
+            }, 2000);
+
+            var side = $('#J_ledDulb').height();
+            var layer_side = $('.J_layer').width();
+            $('.J_layer')
+                .css({
+                    'background-image': 'radial-gradient('+ layer_side/2 +'px circle,hsla(60,98.8%,66.5%,1),hsla(210,11.1%,3.5%,0))'
+                });
+
+            $(document).off('keyup', self.switcher);
+        }
+    },
+
+    /*
+     * 定时器
+     */
+    intervaler : function () {
+        var self = this;
+        self.showProcessing();
+        //达到目标摇动总次数
+        if (window.curProcess.isReach) {
+
+            clearInterval(self.intervalTimer);
+            // setTimeout(function () {
+            //     $('#J_processText').hide('300');
+            //     $('#J_endText').show('300');
+
+            //     setTimeout(function () {
+            //         $('#J_processBox').addClass('hidden');
+            //         $('#J_index').removeClass('hidden');
+            //     }, 3000);
+            // }, 1500);
+        }
+        //未达到目标摇动总次数
+        else {
+            self.getData();
+        }
+    },
+
+    processing : false,
+
+    /*
+     * 进度动画展示
+     */
+    showProcessing : function () {
+        var self = this;
+
+        if (self.processing) return;
+        self.curProcess.isReach = window.curProcess.isReach
+        self.curProcess.curTime = window.curProcess.curTime
+        self.curProcess.curPercent = window.curProcess.curPercent
+
+
+        self.curProcess.curTime = +self.curProcess.curTime;
+        self.curProcess.curPercent = +self.curProcess.curPercent;
+        self.lastProcess.curTime = +self.lastProcess.curTime;
+        self.lastProcess.curPercent = +self.lastProcess.curPercent;
+
+        var addTime = self.curProcess.curTime - self.lastProcess.curTime;
+        var addPercent = self.curProcess.curPercent - self.lastProcess.curPercent;
+
+        if (addTime <= 0) return;
+
+        self.processing = true;
+
+        //设置亮点位置
+        //亮点放大
+        //亮点聚焦
+        self.starShinning(function () {
+            //灯泡亮光扩大
+            // self.shinningLight.css({
+            //     opacity : self.curProcess.curPercent / 100
+            // });
+
+            $('.J_layer').css({
+                opacity : self.curProcess.curPercent / 100
+            });
+
+            //进度动效
+            //400ms内完成，即执行10次
+            var changeDuration = 400;
+            var changeTimer = 40;
+            var changeTime = changeDuration / changeTimer;
+
+            //每次增加的次数
+            var everyAddTime = Math.floor(addTime / changeTime);
+            everyAddTime = everyAddTime >= 1 ? everyAddTime : 1; //防止增加数为0
+
+            //每次增加的百分比
+            var everyAddPercent = Math.floor(addPercent / changeTime);
+            everyAddPercent = everyAddPercent >= 1 ? everyAddPercent : 1; //防止增加数为0
+
+            var addInterval = setInterval(function () {
+                self.lastProcess.curTime = self.lastProcess.curTime + everyAddTime;
+                self.lastProcess.curPercent = self.lastProcess.curPercent + everyAddPercent;
+
+                //未达到当前增加数
+                if (self.lastProcess.curTime < self.curProcess.curTime) {
+                    self.shakingNumber.html(self.lastProcess.curTime);
+                }
+                else {
+                    self.shakingNumber.html(self.curProcess.curTime);
+                }
+
+
+                //未达到当前增加百分比
+                if (self.lastProcess.curPercent < self.curProcess.curPercent) {
+                    self.shakingPercent.html(self.lastProcess.curPercent);
+                }
+                else {
+                    self.shakingPercent.html(self.curProcess.curPercent);
+                }
+
+
+                if (self.lastProcess.curTime >= self.curProcess.curTime
+                    && self.lastProcess.curPercent >= self.curProcess.curPercent) {
+                    clearInterval(addInterval);
+                    self.processing = false;
+
+                    //设置上一次更新的数据
+                    self.lastProcess.curTime = self.curProcess.curTime;
+                    self.lastProcess.curPercent = self.curProcess.curPercent;
+                }
+            }, 40);
+        });
+    },
+
+    /*
+     * 星光效果
+     */
+    starShinning : function (callback) {
+        var self = this;
+        var num = Math.ceil(Math.random() * 4);
+        var stars = '';
+        var left = 0;
+        var top = 0;
+
+        for (var i = 0; i < num; i++) {
+            //区间：[5%, 30%] || [70%, 95%]
+            left = Math.round(Math.random() * 25) + 5 + (Math.round(Math.random()) * 65);
+            //区间：[0, 90%]
+            top = Math.round(Math.random() * 90);
+            stars += '<div class="star J_stars" style="left:'+ left +'%; top:'+ top +'%;"></div>';
+        }
+
+        $('#J_processBox').append(stars);
+        $('.J_stars').addClass('shinning star_scale');
+
+        setTimeout(function () {
+            if (callback) {
+                callback();
+            }
+        }, 600);
+    },
+
+    /*
+     * 请求进度数据
+     */
+    getData : function () {
+        var self = this;
+
+        $.getJSON("/index.php?m=api&c=p2&a=getshake&jsoncallback=?", function(e){
+
+             window.curProcess.isReach = e.isReach
+             window.curProcess.curTime = e.curTime
+             window.curProcess.curPercent = e.curPercent
+
+         });
+            //window.curProcess.curTime += 10
+            //window.curProcess.curPercent += 1;
+
+
+    }
+};
+var root = document.getElementsByTagName('html')[0],
+  NATIVE_W = 1920;
+function updateSize() {
+  var w = document.documentElement.clientWidth;
+  w > 1920 ? w=1920 : w = w;
+  var cw = w / (NATIVE_W / 100);
+  root.style.fontSize = cw + 'px';
+};
+window.onload = updateSize;
+window.onresize = updateSize;
+$(function () {
+    Led.init();
+});
+</script>
+</body>
+</html>

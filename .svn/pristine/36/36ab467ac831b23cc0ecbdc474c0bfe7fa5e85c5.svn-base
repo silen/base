@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="x-dns-prefetch-control" content="on"/>
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="format-detection" content="address=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>书香岭南最美阅读</title>
+    <link rel="stylesheet" type="text/css" href="css/swiper.min.css">
+    <meta name="keywords" content="书香岭南最美阅读" />
+    <meta name="description" content="书香岭南最美阅读" />
+    <style>
+        *{margin:0;padding:0}
+        body {
+            background: #f5f7fa;
+            color: #999;
+            font-family: "微软雅黑";
+        }
+        .header{
+            height: .9rem;
+            line-height: .9rem;
+            background:url(./img/header.jpg) no-repeat;
+            background-size: 100%;
+            color: #FFF;
+            font-size: .24rem;
+            text-align: center;
+        }
+        .header a{
+            color: #FFF;
+            text-decoration: none;
+            margin:0 .12rem;
+            font-weight: normal;
+        }
+        .header a.target{
+            color: #FFCC00;
+        }
+        .banner{
+            position: relative;
+        }
+        .banner_title{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 1.1rem;
+            background:url(img/banner_title.png);
+            background-size: 100%;
+            z-index: 99;
+        }
+        .banner .img{
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .books_item{
+            height: 2.85rem;
+            padding-top: .3rem;
+            background-repeat: repeat-x;
+            background-size: auto 100%;
+            position: relative;
+        }
+        .books_item:nth-child(odd){
+            background-image: url(img/repeat.jpg);
+        }
+        .books_item:nth-child(even){
+            background-image: url(img/repeat2.jpg);
+        }
+        .books_item .img{
+            float: left;
+            margin-left:.4rem;
+            width: 1.9rem;
+            height: 2.6rem;
+        }
+        .books_item .infos{
+            float: right;
+            width: 3.4rem;
+            margin-right: .4rem;
+            color: #332C2B;
+        }
+        .books_item .infos .title{
+            font-size: .27rem;
+            font-weight: normal;
+        }
+        .books_item .infos .detail{
+            font-size: .18rem;
+            margin-top: .15rem;
+            line-height: .25rem;
+        }
+        .books_item .infos .icon{
+            position: absolute;
+            bottom:.4rem;
+            background-size: 100%;
+            background-repeat: no-repeat;
+        }
+        .books_item .infos .icon1{
+            right: 1.4rem;
+            width: .52rem;
+            height: .42rem;
+            background-image:url(img/icon1.png);
+        }
+        .books_item .infos .icon2{
+            right: .4rem;
+            width: .45rem;
+            height: .38rem;
+            background-image:url(img/icon2.png);
+        }
+        .books_item .infos .music{
+            display: none;
+        }
+
+
+    </style>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript">
+      var root = document.getElementsByTagName('html')[0],
+          NATIVE_W = 640;
+      function updateSize() {
+          var w = document.documentElement.clientWidth;
+          // w > 640 ? w=640 : w = w;
+          var cw = w / (NATIVE_W / 100);
+          root.style.fontSize = cw + 'px';
+      };
+      window.onload = updateSize;
+      window.onresize = updateSize;
+
+    </script>
+</head>
+<body>
+    <header class="header">
+        <a href="javascript:void(0);" onclick="getRecommend({'a':'1,5','b':'2,10'}, $(this))" class="target">京东读书</a>
+        <a href="javascript:void(0);" onclick="getRecommend({'a':'3,5','b':'5,10'}, $(this))">网易云阅读</a>
+        <a href="javascript:void(0);" onclick="getRecommend({'a':'6,5','b':'7,10'}, $(this))">喜马拉雅听书</a>
+        <a href="javascript:void(0);" onclick="getRecommend({'a':'8,5','b':'9,10'}, $(this))">ZAKER推荐</a>
+
+    </header>
+    <div class="banner">
+        <h2 class="banner_title"></h2>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+
+            </div>
+        </div>
+    </div>
+    <div class="books_list">
+
+    </div>
+    <script type="text/javascript" src="./js/jquery.js"></script>
+    <script type="text/javascript" src="js/swiper.min.js"></script>
+<script>
+    var $app = [];
+    $(function (e) {
+        getRecommend({'a':'1,5','b':'2,10'}, $('.target'))
+    })
+
+    $app.swiper = new Swiper('.swiper-container');
+    function getRecommend(id, $this)
+    {
+        var $this = $this || ''
+        $('.header a').removeClass('target')
+        if ($this)$this.addClass('target')
+        $.getJSON("/index.php?m=api&c=p2&a=recommend&jsoncallback=?",{id:id}, function(e){
+            var $html = '';
+            var $a = e.info['a'];
+            var $b = e.info['b'];
+            for(i in $a){
+                $html += '<div class="swiper-slide"><a href="'+$a[i]._url+'"><img src="'+$a[i].thumb+'" class="img"></a></div>'
+            }
+            $('.swiper-wrapper').html($html)
+            $app.swiper.update();
+            console.log($app.swiper.slides)
+            $html = ''
+            for(i in $b){
+
+                var $audio = $b[i].audio ?  '<span class="icon icon1 play"></span><audio class="music" src="'+$b[i].audio+'"  controls="controls"></audio>' : ''
+
+                $html += '<div class="books_item">' +
+                        '<a href="'+$b[i]._url+'"> <img src="'+$b[i].thumb+'" class="img"></a>' +
+                        '<div class="infos">' +
+                        '<h3 class="title"><a href="'+$b[i]._url+'"> '+$b[i].title+'</a></h3>' +
+                        '<p class="detail">'+$b[i].desc+'</p>' +
+                        '<a href="'+$b[i]._url+'" class="icon icon2"></a>' +
+                         $audio +
+                        '</div>' +
+                        '</div>'
+            }
+            $('.books_list').html($html)
+            $('.play').click(function(e){
+                //$('audio')[0].play()
+                var $x = $(this).next('.music')
+                $x[0].play()
+                //alert($(this).next('audio'))
+            })
+
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>广东卫视</title>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <script src="/Public/js/jquery.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+  <script src="scripts/flexible.js"></script>
+
+  <link rel="stylesheet" href="styles/vendor.css">
+
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+<div class="main index">
+  <div class="page page1">
+    <div class="relative">
+      <img class="page1-1" src="images/page1-1.png" alt="">
+      <a class="page1__begin" href="/p1/part1.html"></a>
+    </div>
+  </div>
+
+</div>
+<audio src="twins-nizuihong.mp3" autoplay></audio>
+<script>
+    $(function(){
+        $(document).on('click', '.page1__begin', function(){
+            $('.page1').hide()
+            $('.loading').show()
+            setTimeout(check, 1000);
+        })
+
+    })
+    function check(){
+        window.location.href = '/p1/part1.html'
+    }
+</script>
+
+<script src="scripts/vendor.js"></script>
+<script src="scripts/main.js?982375"></script>
+</body>
+</html>

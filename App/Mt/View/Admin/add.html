@@ -1,0 +1,123 @@
+<extend name="Public/base"/>
+
+<block name="nav">
+    <div class="am-cf am-padding">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">管理员</strong> /
+            <small>{$id ? '修改' : '添加'}</small>
+        </div>
+    </div>
+
+</block>
+
+
+<block name="body">
+    <hr/>
+
+    <div class="am-g">
+
+        <div class="am-u-sm-12 am-u-md-4 am-u-md-push-8">
+
+
+        </div>
+
+        <div class="am-u-sm-12 am-u-md-8 am-u-md-pull-4">
+            <form class="am-form am-form-horizontal" method="post" id="ajaxForm">
+                <input type="hidden" value="{$id}" name="id">
+
+                <div class="am-form-group">
+                    <label for="user-name" class="am-u-sm-3 am-form-label">账号</label>
+
+                    <div class="am-u-sm-9">
+                        <input type="text" id="user-name" value="{$username}" name="username" placeholder="账号">
+                        <small></small>
+                    </div>
+                </div>
+
+                <div class="am-form-group">
+                    <label for="user-email" class="am-u-sm-3 am-form-label">邮箱</label>
+
+                    <div class="am-u-sm-9">
+                        <input type="email" id="user-email" value="{$email}" name="email"
+                               placeholder="邮箱">
+                        <small></small>
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <label for="Password" class="am-u-sm-3 am-form-label">密码</label>
+
+                    <div class="am-u-sm-9">
+                        <input type="Password" id="Password" value="" name="password" placeholder="密码">
+                        <small></small>
+                    </div>
+                </div>
+
+                <div class="am-form-group">
+                    <label for="user-phone" class="am-u-sm-3 am-form-label">手机号码</label>
+
+                    <div class="am-u-sm-9">
+                        <input type="email" id="user-phone" name="mobile" value="{$mobile}" placeholder="手机号码">
+                    </div>
+                </div>
+
+                <div class="am-form-group">
+                    <label for="user-phone" class="am-u-sm-3 am-form-label">启用</label>
+
+                    <div class="am-u-sm-9">
+                        <div class="am-btn-group" data-am-button>
+                            <label class="am-btn am-btn-default am-btn-xs">
+                                <input type="radio" value="1" name="status" id="option1"> 是
+                            </label>
+                            <label class="am-btn am-btn-default am-btn-xs">
+                                <input type="radio" value="0" name="status" id="option0"> 否
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="am-form-group">
+                    <label class="am-u-sm-3 am-form-label">群组</label>
+
+                    <div class="am-u-sm-9">
+                        <select name="group_id" data-am-selected="{btnSize: 'sm'}">
+                            <volist name="AuthGroup" id="v">
+                                <option value="{$v.id}">{$v.title}</option>
+                            </volist>
+                        </select>
+                    </div>
+                </div>
+                <div class="am-form-group">
+                    <div class="am-u-sm-9 am-u-sm-push-3">
+                        <button type="button" class="am-btn am-btn-primary" onclick="addData($('#ajaxForm'))">保存修改
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        var $id = "{$id}";
+        var $status = "{$status}";
+        var $group_id = "{$group_id}";
+        $msg = $id ? "修改" : '添加';
+        $(function () {
+            $('#option'+$status).parents('label').addClass('am-active')
+            $('#option'+$status).attr('checked', 'checked');
+            $("select[name='group_id']").val($group_id);
+
+        })
+        function addData(obj) {
+            $.post("{$Think.ROOT_HOST}index.php?m={$Think.MODULE_NAME}&c={$Think.CONTROLLER_NAME}&a=add", obj.serialize(), function (json) {
+                if (!json.s) {
+                    alert(json.error)
+                    return false;
+                }
+                alert($msg + '的ID：' + json.id)
+                window.location.href = "{$Think.ROOT_HOST}index.php?m={$Think.MODULE_NAME}&c={$Think.CONTROLLER_NAME}"
+            }, 'json');
+            return false;
+        }
+    </script>
+</block>

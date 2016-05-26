@@ -1,0 +1,108 @@
+
+<extend name="Public/base"/>
+
+<block name="nav">
+<div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">权限群组</strong> /
+        <small>列表</small>
+    </div>
+</div>
+</block>
+<block name="body">
+    <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+            <div class="am-btn-toolbar">
+                <div class="am-btn-group am-btn-group-xs">
+                    <a href="{:U('group_add')}" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</a>
+
+                </div>
+            </div>
+        </div>
+        <!--<div class="am-u-sm-12 am-u-md-3">
+            <div class="am-form-group">
+                <select data-am-selected="{btnSize: 'sm'}">
+                    <option value="option1">所有类别</option>
+                    <option value="option2">IT业界</option>
+                    <option value="option3">数码产品</option>
+                    <option value="option3">笔记本电脑</option>
+                    <option value="option3">平板电脑</option>
+                    <option value="option3">只能手机</option>
+                    <option value="option3">超极本</option>
+                </select>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+            <div class="am-input-group am-input-group-sm">
+                <input type="text" class="am-form-field">
+          <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+            </div>
+        </div>-->
+    </div>
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <form class="am-form">
+                <table style="border: 1px solid #e9e9e9;"  class="am-table am-table-striped am-table-hover table-main">
+                    <thead>
+                    <tr>
+                        <th class="table-check"><input type="checkbox"/></th>
+                        <th class="table-title">群组</th>
+                        <th class="table-title">描述</th>
+                        <th class="table-type">授权</th>
+                        <th class="table-date am-hide-sm-only">状态</th>
+                        <th class="table-set">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="list" id="data">
+                        <tr>
+                            <td><input type="checkbox"/></td>
+                            <td>{$data.title}</td>
+                            <td>{$data.description}</td>
+                            <td><a href="{:U('auth', array('group_id'=> $data['id']))}">访问授权</a> </td>
+
+                            <td class="am-hide-sm-only">{$data.status_val}</td>
+
+                            <td>
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <eq name="data.id" value="1"><else/>
+                                            <a href="{:U('group_add', array('id'=>$data['id']))}" class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑
+                                        </a>
+
+                                        <a href="javascript:void(0)" onclick="delStore('{$data.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-trash-o"></span> 删除
+                                        </a>
+                                            </eq>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </volist>
+                    </tbody>
+                </table>
+                <div class="am-cf tk-pagenav">
+                    {$show}
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</block>
+<block name="script">
+    <script>
+        function delStore(id)
+        {
+            if (confirm('是否删除ID为'+id+"的数据")){
+                $.post("{:U('group_del')}", {id:id}, function(json){
+                    alert('删除的用户ID：'+json.id)
+                    window.location.reload()
+                }, 'json');
+            }
+
+        }
+    </script>
+</block>

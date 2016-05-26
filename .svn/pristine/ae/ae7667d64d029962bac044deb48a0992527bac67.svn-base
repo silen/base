@@ -1,0 +1,391 @@
+var SHAKE_THRESHOLD = 3000;
+var last_update = 0;
+var x = y = z = last_x = last_y = last_z = 0;
+function init() {
+    if (window.DeviceMotionEvent) {
+        setTimeout(function () {
+            window.addEventListener('devicemotion', deviceMotionHandler, false);
+        }, 2000);
+    } else {
+        console.error('not support mobile event');
+    }
+}
+function deviceMotionHandler(eventData) {
+    var acceleration = eventData.accelerationIncludingGravity;
+    var curTime = new Date().getTime();
+    if ((curTime - last_update) > 100) {
+        var diffTime = curTime - last_update;
+        last_update = curTime;
+        x = acceleration.x;
+        y = acceleration.y;
+        z = acceleration.z;
+        var speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+
+        if (speed > SHAKE_THRESHOLD) {
+            // TODO 手机摇一摇触发
+            // TODO 问题1:这个页面必须有摇一摇的结果后才能触发,目前没有实现
+
+            if ($('.main').hasClass('index')) {
+                location.href = $('.btn, .page1__begin').eq(0).attr('href');
+            } else {
+                check()
+            }
+
+        }
+        last_x = x;
+        last_y = y;
+        last_z = z;
+    }
+}
+
+function GetQueryString() {
+    var reg = new RegExp("/part([0-9]).html", "i");
+    var r = window.location.href.match(reg);  //获取url中"?"符后的字符串并正则匹配
+    var context = "";
+    window.console.log(r)
+    if (r != null)
+        return r[1]
+}
+
+var canJump = false;
+function check() {
+    var part = GetQueryString()
+    var num = getCookie('part' + part)
+    if (isNaN(num)) {
+        num = rand()
+    }
+    setCookie('part' + part, num)
+    if (!$('.ad').hasClass('active') && !$('.score-' + num).hasClass('active')) {
+
+        $('.ad img').removeClass('active')
+        $('.score img').removeClass('active')
+        $('.score-' + num).addClass('active')[0].onload = function () {
+            setTimeout(function () {
+                canJump = true;
+            }, 3000);
+        };
+        if ($('.score-' + num).addClass('active')[0].complete) {
+            setTimeout(function () {
+                canJump = true;
+            }, 3000);
+        }
+        $('.ad-' + num).addClass('active')
+        setCookie('part' + part, num)
+        if (getCookie('part' + part))setCookie('part' + part, num)
+        $('.part').show();
+        $('.rrPage').hide();
+    } else {
+        var page = 'part' + (parseInt(part) + 1)
+        if (parseInt(part) == 6)page = 'page2';
+        if (canJump) {
+            window.location.href = '/p1/' + page + '.html';
+        }
+    }
+
+    //
+}
+function loading() {
+    var html = '<div class="page loading">' +
+        '<div class="loader">' +
+        '<div class="loader-inner ball-spin-fade-loader">' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
+    $('.main').append()
+}
+function rand() {
+    arry = ["2", "3", "4", "5", "5", "5", "4", "4", "2", "3", "2", "5", "4"];      //定义一个数组，存放名字
+    var rand = Math.floor(Math.random() * arry.length);   //随记取得数组的下标
+    return arry[rand];
+}
+function Radar(options) {
+    var self = this;
+    this.options = {
+        initData: [1, 1, 1, 1, 1, 1]
+    };
+    for (var key in options) {
+        this.options[key] = options[key];
+    }
+
+    var $resultRadar = $(this.options.canvas),
+        context = $resultRadar[0].getContext('2d'),
+        contextWidth = $resultRadar.width(),
+        contextHeight = $resultRadar.height(),
+        radio = contextWidth / 433,
+        source = [
+            [[219, 252], [219, 184], [219, 126], [219, 66], [219, 0]],
+            [[219, 252], [159, 216], [109, 187], [58, 155], [0, 126]],
+            [[219, 252], [159, 288], [109, 316], [58, 346], [0, 376]],
+            [[219, 252], [219, 319], [219, 376], [219, 436], [219, 501]],
+            [[219, 252], [279, 288], [329, 316], [381, 346], [433, 376]],
+            [[219, 252], [279, 216], [329, 187], [381, 157], [433, 126]]
+        ],
+        img = new Image(),
+        imgBgSrc = 'images/result-bg.png',
+        fillStyle = 'rgba(255,165,0,.7)';
+    $resultRadar.attr({
+        width: contextWidth,
+        height: contextHeight
+    });
+
+    this.drawResult = function (data) {
+        context.clearRect(0, 0, contextWidth, contextHeight);
+        context.drawImage(img, 0, 0, contextWidth, contextHeight);
+        context.beginPath();
+        context.moveTo(source[0][data[0] - 1][0] * radio, source[0][data[0] - 1][1] * radio);
+        for (var i = 1; i < data.length; i++) {
+            context.lineTo(source[i][data[i] - 1][0] * radio, source[i][data[i] - 1][1] * radio);
+        }
+        context.closePath();
+        context.fillStyle = fillStyle;
+        context.fill();
+    };
+
+    img.onload = function () {
+        self.drawResult(self.options.initData);
+    };
+    img.src = imgBgSrc;
+    arry = ["200", "180", "160", "170", "210", "220", "230", "150", "280", "300", "220", "260", "180"];      //定义一个数组，存放名字
+    var rand = Math.floor(Math.random() * arry.length);   //随记取得数组的下标
+    //$('.resultSocre').text(arry[rand])
+    $.post('/index.php?a=insertMemberLog', {data: self.options.initData}, function () {
+
+    }, 'json')
+
+}
+
+
+//----------------
+//read COOKIE
+function getCookie(cookiename) {
+    var result;
+    var mycookie = document.cookie;
+    var start2 = mycookie.indexOf(cookiename + "=");
+    if (start2 > -1) {
+        start = mycookie.indexOf("=", start2) + 1;
+        var end = mycookie.indexOf(";", start);
+
+        if (end == -1) {
+            end = mycookie.length;
+        }
+
+        result = unescape(mycookie.substring(start, end));
+    }
+
+    return result;
+}
+//----------------
+//write COOKIE
+function setCookie(cookiename, cookievalue, hours) {
+    var date = new Date();
+    date.setTime(date.getTime() + Number(hours) * 3600 * 1000);
+    document.cookie = cookiename + "=" + cookievalue + "; path=/;expires = " + date.toGMTString();
+
+}
+
+if (typeof(xpage) == "undefined")init();
+$(function () {
+    if (typeof(xpage) == "undefined") {
+        $.post('/index.php?a=year', {url: window.location.href}, function (json) {
+            $('.resultSocre').text(json.username)
+            //alert(JSON.stringify(json))
+            wx.config({
+                //debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                appId: json.appId, // 必填，公众号的唯一标识
+                timestamp: json.timestamp, // 必填，生成签名的时间戳
+                nonceStr: json.nonceStr, // 必填，生成签名的随机串
+                signature: json.signature,// 必填，签名，见附录1
+                jsApiList: [
+                    'onMenuShareTimeline',
+                    'onMenuShareAppMessage',
+                    'onMenuShareQQ',
+                    'onMenuShareWeibo',
+                    'onMenuShareQZone',
+                ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+            });
+
+            var urls = '';
+
+
+            wx.ready(function () {
+
+                var title = json.share_title;
+                var link = json.url;
+                var imgUrl = json.avatar;
+                var desc = json.desc;
+                wx.error(function (res) {
+                })
+                wx.checkJsApi({
+                    jsApiList: ['onMenuShareTimeline'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                    success: function (res) {
+                        // 以键值对的形式返回，可用的api值true，不可用为false
+                        // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+                    }
+                });
+                wx.onMenuShareTimeline({
+                    title: title,
+                    link: link,
+                    imgUrl: imgUrl,
+                    desc: desc,
+                    trigger: function (res) {
+                        // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+                        //alert('用户点击分享到朋友圈');
+                        //alert(JSON.stringify(res));
+                    },
+                    success: function (res) {
+                        //alert('已分享');
+                    },
+                    cancel: function (res) {
+                        ///alert('已取消');
+                    },
+                    fail: function (res) {
+                        //alert(JSON.stringify(res));
+                    }
+                });
+                wx.onMenuShareQQ({
+                    title: title,
+                    link: link,
+                    imgUrl: imgUrl,
+                    desc: desc,
+                    trigger: function (res) {
+                        //alert('用户点击分享到QQ');
+                    },
+                    complete: function (res) {
+                        // alert(JSON.stringify(res));
+                    },
+                    success: function (res) {
+                        //alert('已分享');
+                    },
+                    cancel: function (res) {
+                        //alert('已取消');
+                    },
+                    fail: function (res) {
+                        //alert(JSON.stringify(res));
+                    }
+                });
+                wx.onMenuShareAppMessage({
+                    title: title,
+                    link: link,
+                    imgUrl: imgUrl,
+                    desc: desc,
+                    trigger: function (res) {
+                        // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+                        //alert('用户点击发送给朋友');
+                    },
+                    success: function (res) {
+                        //alert('已分享');
+                    },
+                    cancel: function (res) {
+                        //alert('已取消');
+                    },
+                    fail: function (res) {
+                        //alert(JSON.stringify(res));
+                    }
+                });
+                wx.onMenuShareWeibo({
+                    title: title,
+                    link: link,
+                    imgUrl: imgUrl,
+                    desc: desc,
+                    trigger: function (res) {
+                        //alert('用户点击分享到微博');
+                    },
+                    complete: function (res) {
+                        //alert(JSON.stringify(res));
+                    },
+                    success: function (res) {
+                        //alert('已分享');
+                    },
+                    cancel: function (res) {
+                        //alert('已取消');
+                    },
+                    fail: function (res) {
+                        //alert(JSON.stringify(res));
+                    }
+                });
+                wx.onMenuShareQZone({
+                    title: title,
+                    link: link,
+                    imgUrl: imgUrl,
+                    desc: desc,
+                    trigger: function (res) {
+                        //alert('用户点击分享到QZone');
+                    },
+                    complete: function (res) {
+                        //alert(JSON.stringify(res));
+                    },
+                    success: function (res) {
+                        //alert('已分享');
+                    },
+                    cancel: function (res) {
+                        //alert('已取消');
+                    },
+                    fail: function (res) {
+                        //alert(JSON.stringify(res));
+                    }
+                });
+
+            })
+
+        }, 'json')
+    }
+})
+
+
+$(function () {
+    $('.sharePage').on('click', function () {
+        $(this).hide()
+    })
+    var mainContainer = $('.page'),
+        mainContainerHeihgt = 0;
+    if (mainContainer.length === 0) {
+        mainContainer = $('.part');
+        mainContainerHeihgt += parseInt(mainContainer.css('padding-top').replace('px', ''));
+    }
+    mainContainerHeihgt += mainContainer.height();
+
+    if (mainContainerHeihgt > window.innerHeight) {
+        console.log(mainContainer.height());
+        console.log(window.innerHeight);
+        var ratio = window.innerHeight / mainContainerHeihgt;
+        if ($('.main').hasClass('pagetwo')) {
+            ratio = ratio * 0.93;
+        }
+        $('.page, .part').css({
+            '-webkit-transform': 'scale(' + ratio + ')',
+            '-moz-transform': 'scale(' + ratio + ')',
+            '-ms-transform': 'scale(' + ratio + ')',
+            'transform': 'scale(' + ratio + ')'
+        });
+        //alert('bigger then window inner');
+    }
+
+
+    // TODO 问题2:页面动画必须完成后,才能显示结果,目前没有实现
+    $('.rrBox').addClass('animation');
+    var sound = document.getElementById("video");
+    var resultSound = document.getElementById("videoResult");
+    if (sound)sound.play();
+    setTimeout(function () {
+        if (resultSound)resultSound.play();
+    }, 1000);
+    setTimeout(function () {
+        $('.rrBox').removeClass('animation');
+        if (typeof(xpage) == "undefined") {
+
+            check();
+        }
+    }, 3200);
+});

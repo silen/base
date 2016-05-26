@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>广东卫视</title>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- Place favicon.ico in the root directory -->
+    <script src="/Public/js/jquery.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+  <script src="scripts/flexible.js"></script>
+
+  <link rel="stylesheet" href="styles/vendor.css">
+
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+<div class="main">
+    <div class="part rrPage active">
+        <img class="head" src="images/part6-head.png" alt="">
+        <div class="rrBox">
+            <img class="star" src="images/rr-stars.png" alt="">
+            <!--<img class="box" src="images/rr-box.png" alt="">-->
+            <div class="box">
+                <img class="boxf" src="images/rr-box-f.png" alt="">
+                <img class="boxb" src="images/rr-box-b.png" alt="">
+            </div>
+            <img class="rr" src="images/rr.png" alt="">
+        </div>
+    </div>
+  <div class="part part6" style="display: none">
+    <img class="head" src="images/part6-head.png" alt="">
+    <div class="score">
+      <img src="images/part6-star-2.png" alt="" class="score-2">
+      <img src="images/part6-star-3.png" alt="" class="score-3">
+      <img src="images/part6-star-4.png" alt="" class="score-4">
+      <img src="images/part6-star-5.png" alt="" class="score-5">
+    </div>
+    <div class="line"></div>
+    <div class="ad">
+      <img src="images/part6-ad-2.png" alt="" class="ad-2">
+      <img src="images/part6-ad-3.png" alt="" class="ad-3">
+      <img src="images/part6-ad-4.png" alt="" class="ad-4">
+      <img src="images/part6-ad-5.png" alt="" class="ad-5">
+    </div>
+    <a class="btn" href="/p1/page2.html"></a>
+  </div>
+</div>
+<audio id="video" src="yyy.mp3"></audio>
+<audio id="videoResult" src="result.mp3"></audio>
+<audio src="twins-nizuihong.mp3" autoplay></audio>
+<script src="scripts/vendor.js"></script>
+
+<script src="scripts/main.js?982375"></script>
+</body>
+</html>

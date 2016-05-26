@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>广东卫视</title>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <script src="scripts/flexible.js"></script>
+
+  <link rel="stylesheet" href="styles/vendor.css">
+
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+<div class="main">
+  <div class="part rrPage active">
+    <img class="head" src="images/part1-head.png" alt="">
+    <div class="rrBox">
+      <img class="star" src="images/rr-stars.png" alt="">
+      <!--<img class="box" src="images/rr-box.png" alt="">-->
+      <div class="box">
+        <img class="boxf" src="images/rr-box-f.png" alt="">
+        <img class="boxb" src="images/rr-box-b.png" alt="">
+      </div>
+      <img class="rr" src="images/rr.png" alt="">
+    </div>
+  </div>
+
+</div>
+
+<script src="scripts/vendor.js"></script>
+
+<script src="scripts/main.js"></script>
+</body>
+</html>

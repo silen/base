@@ -1,0 +1,55 @@
+<extend name="Public/base"/>
+<block name="nav">
+    <div class="am-cf am-padding">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">活动</strong> /
+            <small>参与日志</small>
+        </div>
+    </div>
+
+</block>
+<block name="body">
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <form class="am-form">
+                <table style="border: 1px solid #e9e9e9;"  class="am-table am-table-striped am-table-hover table-main">
+                    <thead>
+                    <tr>
+                        <th class="table-check"><input type="checkbox"/></th>
+                        <th class="table-id">ID</th>
+                        <th class="table-title">openid</th>
+                        <th class="table-author am-hide-sm-only">~~</th>
+                        <th class="table-date am-hide-sm-only">日期</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="list" id="data">
+                        <tr>
+                            <td><input type="checkbox"/></td>
+                            <td>{$data.id}</td>
+                            <td>{$data.openid}</td>
+                            <td>
+                                家庭：{$data['data'][0]}
+                                桃花：{$data['data'][1]}
+                                学业：{$data['data'][2]}
+                                事业：{$data['data'][3]}
+                                财富：{$data['data'][4]}
+                                健康：{$data['data'][5]}
+
+                            </td>
+                            <td class="am-hide-sm-only">{$data.addtime|date="Y-m-d H:i:s",###}</td>
+
+                        </tr>
+
+                    </volist>
+                    </tbody>
+                </table>
+                <div class="am-cf tk-pagenav">
+                    {$show}
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</block>

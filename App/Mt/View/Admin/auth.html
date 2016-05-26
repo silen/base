@@ -1,0 +1,47 @@
+
+<extend name="Public/base"/>
+
+<block name="nav">
+<div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">群组</strong> /
+        <small>访问权限</small>
+    </div>
+</div>
+</block>
+<block name="body">
+    <div class="am-g">
+        <form method="post" action="{:U('writeAccess')}">
+            <input type="hidden" value="{$Think.get.group_id}" name="group_id">
+        <div class="am-u-sm-12">
+            <volist name="AuthRule" id="v">
+            <div class="am-panel am-panel-default">
+                <div class="am-panel-hd"><input <if condition="in_array($v['id'], $_rules)">checked</if> name="rules[]" class="to-menu" type="checkbox" value="{$v.id}">{$v.title}</div>
+                <div class="am-panel-bd">
+                    <volist name="v._child" id="_v">
+                        <span><input name="rules[]" <if condition="in_array($_v['id'], $_rules)">checked</if> type="checkbox" value="{$_v.id}" style="margin:0px 5px;">{$_v.title}</span>
+                        <volist name="_v._child" id="_v1">
+                            <span><input name="rules[]" <if condition="in_array($_v1['id'], $_rules)">checked</if> type="checkbox" value="{$_v1.id}" style="margin:0px 5px;">{$_v1.title}</span>
+                        </volist>
+                    </volist>
+
+                </div>
+            </div>
+            </volist>
+            <p><button type="submit" class="am-btn am-btn-default">提交</button></p>
+        </div>
+
+
+        </form>
+    </div>
+</block>
+<block name="script">
+    <script>
+        $(function(e){
+            $('.to-menu').change(function(){
+                $(this).parents('.am-panel-default').find('.am-panel-bd span input').prop('checked', this.checked)
+
+
+            })
+        })
+    </script>
+</block>

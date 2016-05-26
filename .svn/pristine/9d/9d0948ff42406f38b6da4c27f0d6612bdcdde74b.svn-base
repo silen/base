@@ -1,0 +1,144 @@
+<?php
+namespace Api\Controller;
+use Think\Controller;
+class P2Controller extends Controller
+{
+    private $shakeKey = 'common:Shake',
+        $ShakeUserKey = 'common:ShakeUser';
+    private $redis;
+
+    public function _initialize()
+    {
+        $this->redis = redis();
+    }
+
+    /**
+     * 用户摇动的
+     */
+    public function shake()
+    {
+
+        $key = getRandUserid();
+        $starttime = $this->redis->hGet($this->shakeKey, 'starttime');
+        if (time() < $starttime) dieJson(array('state' => false, 'info' => 'time'));
+
+        $key = 'user' . $key;
+        $num = $this->redis->hGet($this->ShakeUserKey, $key);
+        $count = $this->redis->hGet($this->shakeKey, 'shakeAllcount');
+        $num = $num ? $num : 0;
+        $count = $count ? $count : 0;
+        if ($count + 1 > $this->redis->hGet($this->shakeKey, 'shakecount')) dieJson(array('state' => false, 'info' => 'count', 'num' => $num));
+        $this->redis->hSet($this->ShakeUserKey, $key, ++$num);
+        $this->redis->hSet($this->shakeKey, 'shakeAllcount', ++$count);
+
+        dieJson(array('state' => true, 'num' => $num));
+    }
+
+
+    /**
+     * 获取摇动次数
+     */
+    public function getshake()
+    {
+        $count = $this->redis->hGet($this->shakeKey, 'shakeAllcount');
+        $count = $count ? $count : 0;
+        $shakecount = $this->redis->hGet($this->shakeKey, 'shakecount');
+        list($count, $shakecount) = $this->cheatCount($count, $shakecount);
+        $isReach = false;
+        if ($count == $shakecount) $isReach = true;
+        $x = intval(($count / $shakecount) * 100);
+        $x = $x == 0 && $count > 1 ? 0.5 : $x;
+        dieJson(array('curPercent' => $x, 'curTime' => $count, 'isReach' => $isReach));
+    }
+
+    /**
+     * 作弊
+     * @param $count
+     * @param $shakecount
+     * @return array
+     */
+    private function cheatCount($count, $shakecount)
+    {
+        $cheatcount = $this->redis->hGet($this->shakeKey, 'cheatcount');
+
+        if ($cheatcount > 0) {
+            $base = 10;
+            if ($cheatcount > 20000)  {
+                $base = 20;
+            }  else if ($cheatcount > 15000){
+                $base = 15;
+            } else if ($cheatcount > 10000){
+                $base = 10;
+            } else if ($cheatcount > 5000){
+                $base = 5;
+            } else {
+                $base = 1;
+            }
+            $num = intval($cheatcount/$base);
+
+            $count = $count + $num;
+
+            if ($shakecount < $count){
+                $count =  $shakecount;
+            }
+            $this->redis->hSet($this->shakeKey, 'shakeAllcount', $count);
+
+        }
+        return array($count, $shakecount);
+    }
+
+
+    public function recommend()
+    {
+        $ids = I('id');
+        if (!$ids)dieJson(array('info'=>array()));
+
+        $time = time();
+        foreach ($ids as $key=>$id) {
+            $_id = explode(',', $id);
+            $map = array(
+                'rid' => $_id[0],
+                'status' => 1,
+                'starttime' => array('lt', $time),
+                'endtime' => array('gt', $time),
+            );
+            $r[$key] = D('mt/P2RecommendContent')->where($map)->order('sort ASC')->limit($_id[1])->select();
+            foreach ($r[$key] as &$v){
+
+                $v['_url'] = U('go', array('rid'=>urlencode($v['id'])));
+            }
+
+        }
+        dieJson(array('info'=>$r));
+    }
+    public function go()
+    {
+        $id = I('rid');
+        if (!$id)$this->error('错误连接');
+        $time = time();
+        $map = array(
+            'id' => $id,
+            'status' => 1,
+            'starttime' => array('lt', $time),
+            'endtime' => array('gt', $time),
+        );
+        $info = D('mt/P2RecommendContent')->where($map)->find();
+
+        $ip = get_client_ip();
+        //$ip = ip2long($ip);
+
+        $log = array(
+            'rid' => $info['rid'],
+            'cid' => $info['id'],
+            'openid' => 'xx',
+            'addtime' => $time,
+            'ip' => $ip,
+            'data' => serialize($_SERVER)
+
+        );
+        M('p2_recommend_log')->add($log);
+        D('mt/P2RecommendContent')->where(array('id'=>$id))->setInc('pv', 1);
+        redirect($info['url']);
+    }
+
+}

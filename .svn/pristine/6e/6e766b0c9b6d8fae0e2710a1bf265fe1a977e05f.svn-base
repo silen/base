@@ -1,0 +1,180 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{$seo[title] ? $seo[title] : '后台管理'}</title>
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="apple-mobile-web-app-title" content="管理后台"/>
+    <link rel="stylesheet" href="__CSS__/amazeui.min.css"/>
+    <link rel="stylesheet" href="__CSS__/amazeui.datetimepicker.css"/>
+    <link rel="stylesheet" href="__CSS__/admin.css">
+    <script src="__JS__/jquery.min.js"></script>
+    <style>
+        .tk-pagenav {
+            height: 24px;
+            zoom: 1;
+            text-align: right;
+            padding: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tk-pagenav a {
+            display: inline-block;
+            padding: 0 9px;
+            margin: 0 2px;
+            height: 22px;
+            line-height: 22px;
+            overflow: hidden;
+            vertical-align: middle;
+            text-decoration: none;
+            background: white;
+            border: 1px solid #E3E3E3;
+            text-align: center;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            color: #666666;
+        }
+
+        .tk-pagenav a.now {
+            display: inline-block;
+            padding: 0 9px;
+            height: 22px;
+            line-height: 22px;
+            overflow: hidden;
+            vertical-align: middle;
+            text-decoration: none;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            background: #f35c03;
+            border: 1px solid #f35c03;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .tk-pagenav .current {
+            display: inline-block;
+            padding: 0 9px;
+            height: 22px;
+            line-height: 22px;
+            overflow: hidden;
+            vertical-align: middle;
+            text-decoration: none;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            background: #f35c03;
+            border: 1px solid #f35c03;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            margin: 1px;
+        }
+
+        .tk-pagenav .next, .tk-pagenav .prev {
+            background: none;
+            border: 1px solid #E3E3E3;
+            color: #666666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+    以获得更好的体验！</p>
+<![endif]-->
+
+<header class="am-topbar admin-header">
+    <div class="am-topbar-brand">
+        <small><img height="40" src="__STATIC__/i/logo.jpg"></small>
+        <small style="font-weight: bold">后台管理</small>
+    </div>
+
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only"
+            data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span
+            class="am-icon-bars"></span></button>
+
+    <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+        <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+            <li class="am-dropdown" data-am-dropdown>
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                    <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
+                </a>
+                <ul class="am-dropdown-content">
+                    <li><a href="{:U('admin/info')}"><span class="am-icon-cog"></span> 设置</a>
+                    </li>
+                    <li><a href="{:U('login/logout')}"><span class="am-icon-power-off"></span> 退出</a></li>
+                </ul>
+            </li>
+            <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span
+                    class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="am-cf admin-main">
+    <!-- sidebar start -->
+    <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
+        <div class="am-offcanvas-bar admin-offcanvas-bar">
+
+                <!--<li><a href="{:U('memberLog/index')}"><span class="am-icon-sign-out"></span> 活动记录</a></li>
+                <li><a href="{:U('memberLog/count')}"><span class="am-icon-sign-out"></span> 活动统计</a></li>
+                <li><a href="{:U('login/logout')}"><span class="am-icon-sign-out"></span> 注销</a></li>-->
+
+            <ul  class="am-list admin-sidebar-list">
+                <volist name="__MENU__" id="v">
+                    <if condition="isset($v[_child])">
+                    <li class="admin-parent">
+                        <a class="am-cf" data-am-collapse="{target: '#collapse-nav-{$v.id}'}">
+                            {$v.title}<span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+                        <ul class="am-list am-collapse admin-sidebar-sub" id="collapse-nav-{$v.id}">
+                            <volist name="v._child" id="_v">
+                            <li><a href="{$_v._url}" class="am-cf">{$_v.title}</a></li>
+                            </volist>
+
+                        </ul>
+                    </li>
+                        <else />
+                        <li><a href="{$v._url}">{$v.title}</a></li>
+                    </if>
+                </volist>
+
+            </ul>
+
+
+        </div>
+    </div>
+    <!-- sidebar end -->
+    <div class="admin-content">
+        <block name="nav"></block>
+        <block name="body"></block>
+    </div>
+    <!-- content end -->
+
+</div>
+
+<a href="#" class="am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}">
+    <span class="am-icon-btn am-icon-th-list"></span>
+</a>
+<footer>
+    <hr>
+</footer>
+<block name="script"></block>
+<script>
+    $(function () {
+        //$('.admin-main').css('height', $(window).height() - $('.admin-header').height())
+        $('.admin-offcanvas-bar').css('height', $(window).height() - $('.admin-header').height())
+
+    })
+</script>
+
+<script src="__JS__/amazeui.min.js"></script>
+<script src="__JS__/amazeui.datetimepicker.min.js"></script>
+<script src="__JS__/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?php
+namespace Mt\Model;
+
+use Think\Model;
+
+class P2RecommendContentModel extends Model
+{
+    protected $tableName = 'p2_recommend_content';
+
+
+    public function ls($where, $field = "*", $page = 1, $size = 10, $order = "sort DESC, id DESC")
+    {
+
+        $offset = $size * ($page - 1);
+        $list = $this->field($field)->where($where)->limit("{$offset},{$size}")->order($order)->select();
+        $_where = array();
+        if ($where['rid']){
+            $_where['id'] = $where['rid'];
+        }
+        $recommend   =  D('p2_recommend')->where($_where)->getField('id,title');
+        foreach ($list as &$v){
+            $v['status_val'] = $v['status'] == 1 ? '发布' : ($v['status'] == 2 ? '禁用' : '存档');
+            $v['recommend_title'] = $recommend[$v['rid']];
+        }
+        return $list;
+    }
+}

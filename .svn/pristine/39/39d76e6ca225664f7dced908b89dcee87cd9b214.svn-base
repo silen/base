@@ -1,0 +1,312 @@
+ <!doctype html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>广东卫视</title>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- Place favicon.ico in the root directory -->
+    <script src="/Public/js/jquery.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+  <script src="scripts/flexible.js"></script>
+
+  <link rel="stylesheet" href="styles/vendor.css">
+<script>var xpage = 1;</script>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+<div class="main pagetwo">
+  <div class="page page2">
+      <img class="words" src="" alt="">
+      <div class="content">
+      <img class="page2-1" src="images/page2-head.png" alt="">
+      <div class="page2-2">
+          <div class="resultSocre"></div>
+
+          <div class="resultRadarWrapper">
+              <canvas id="resultRadar" class="resultRadar"></canvas>
+          </div>
+      </div>
+      <!--<img class="page2-2" src="images/page2-bg.png" alt="">-->
+    </div>
+    <a class="page2__shareBtn btn" href="javascript:void(0);"></a>
+      <a class="page2__shareBtn1" href="http://wqs.jd.com/event/brand/hnnianhuo2016/index.shtml?PTAG=17053.1.1&from=groupmessage&isappinstalled=0"></a>
+  </div>
+    <div class="sharePage" style="display: none;">
+        <div class="sharePage__mark"></div>
+        <img class="sharePage-img" src="images/share.png" alt="">
+    </div>
+</div>
+<audio src="twins-nizuihong.mp3" autoplay></audio>
+<script>
+
+    $(function(){
+        $('.page2__shareBtn').on('click', function(){
+            $('.sharePage').show();
+        })
+    })
+</script>
+<script src="scripts/vendor.js"></script>
+
+<script src="scripts/main.js?982375"></script>
+<script>
+    var etBLen = function(str) {
+        if (str == null) return 0;
+        if (typeof str != "string"){
+            str += "";
+        }
+        return str.replace(/[^x00-xff]/g,"01").length;
+    }
+    window.textValue = ''
+    $(function(){
+        if (!getCookie('openid')) {
+            //window.location.href = '/index.php?a=getOpenid&redirect_uri='+encodeURI(window.location.href)
+            //exit;
+        }
+        var $username = getCookie('username');
+        alert(str_decode($username))
+        return false
+        if ($('.words').length > 0) {
+            var index = parseInt(Math.random() * 28);
+            var words = [
+                '彪悍的人生不需要解释',
+                '此女要火',
+                '发发发,重要的事情说三遍',
+                '高端大气上档次,低调奢华有内涵',
+                '给点阳光就灿烂',
+                '功课亮绿灯,照亮我前程',
+                '冷艳高贵接地气,炫酷狂拽吊炸天',
+                '梅花香自苦寒来,不是天才是地才',
+                '你就是美丽旗舰店',
+                '你是花花世界里限量版的花花蝴蝶',
+                '你又不是人民币,偏偏人人都爱你',
+                '徘徊在牛A与牛C之间',
+                '掐指一算,就你最棒',
+                '前人栽树,给我乘凉',
+                '三分长相七分打扮,九十分就是看气质',
+                '世界的眼神锁定我',
+                '世界那么大,就等你去看',
+                '帅翻一整个小区',
+                '四海之内皆干爹',
+                '天了噜!你的衣服又瘦了',
+                '天天好嗨心',
+                '颜值够,不怕穿得厚',
+                '一失足成千古风流人物',
+                '有钱人终成眷属',
+                '原来帅也可以这样具体呀!',
+                '这是美cry我妈的儿子/女儿了',
+                '众里寻她千百度,得来全不费工夫',
+                '超过如来佛',
+            ];
+            console.log(words[index - 1]);
+            window.textValue = words[index - 1]
+
+            $('.words').attr('src', 'images/' + index + '.png')
+            //$('.words').attr('src', 'images/' + (parseInt(Math.random() * 28) + 1) + '.png')
+
+            $.post('/index.php?a=year', {url: window.location.href, val: words[index - 1]}, function (json) {
+                if(etBLen(json.username) > 16){
+                    //$('.resultSocre').css({'font-size':'12px', 'text-align' : 'center'})
+                    $('.resultSocre').css({'font-size':'13px', 'text-align' : 'center', 'height': '35px', 'line-height':'35px'})
+                }
+
+                $('.resultSocre').text(json.username)
+                // scale if user name is to long
+                /*var $name = $('.resultSocre');
+                if ($name.width() > $('.page2-2').width()) {
+                    $name.css({
+                        'transform': 'translate(-50%, 0) scale(' + $('.page2-2').width() / $name.width() + ')',
+                        'text-align' : 'center'
+                    })
+                }*/
+                //alert(JSON.stringify(json))
+                wx.config({
+                    //debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: json.appId, // 必填，公众号的唯一标识
+                    timestamp: json.timestamp, // 必填，生成签名的时间戳
+                    nonceStr: json.nonceStr, // 必填，生成签名的随机串
+                    signature: json.signature,// 必填，签名，见附录1
+                    jsApiList: [
+                        'onMenuShareTimeline',
+                        'onMenuShareAppMessage',
+                        'onMenuShareQQ',
+                        'onMenuShareWeibo',
+                        'onMenuShareQZone',
+                    ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                });
+
+                var urls = '';
+
+
+                wx.ready(function () {
+
+                    var title = json.share_title;
+                    var link = json.url;
+                    var imgUrl = json.avatar;
+                    var desc = json.desc;
+                    wx.error(function (res) {
+                    })
+                    wx.checkJsApi({
+                        jsApiList: ['onMenuShareTimeline'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                        success: function (res) {
+                            // 以键值对的形式返回，可用的api值true，不可用为false
+                            // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+                        }
+                    });
+                    wx.onMenuShareTimeline({
+                        title: title,
+                        link: link,
+                        imgUrl: imgUrl,
+                        desc: desc,
+                        trigger: function (res) {
+                            // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+                            //alert('用户点击分享到朋友圈');
+                            //alert(JSON.stringify(res));
+                        },
+                        success: function (res) {
+                            //alert('已分享');
+                        },
+                        cancel: function (res) {
+                            ///alert('已取消');
+                        },
+                        fail: function (res) {
+                            //alert(JSON.stringify(res));
+                        }
+                    });
+                    wx.onMenuShareQQ({
+                        title: title,
+                        link: link,
+                        imgUrl: imgUrl,
+                        desc: desc,
+                        trigger: function (res) {
+                            //alert('用户点击分享到QQ');
+                        },
+                        complete: function (res) {
+                            // alert(JSON.stringify(res));
+                        },
+                        success: function (res) {
+                            //alert('已分享');
+                        },
+                        cancel: function (res) {
+                            //alert('已取消');
+                        },
+                        fail: function (res) {
+                            //alert(JSON.stringify(res));
+                        }
+                    });
+                    wx.onMenuShareAppMessage({
+                        title: title,
+                        link: link,
+                        imgUrl: imgUrl,
+                        desc: desc,
+                        trigger: function (res) {
+                            // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+                            //alert('用户点击发送给朋友');
+                        },
+                        success: function (res) {
+                            //alert('已分享');
+                        },
+                        cancel: function (res) {
+                            //alert('已取消');
+                        },
+                        fail: function (res) {
+                            //alert(JSON.stringify(res));
+                        }
+                    });
+                    wx.onMenuShareWeibo({
+                        title: title,
+                        link: link,
+                        imgUrl: imgUrl,
+                        desc: desc,
+                        trigger: function (res) {
+                            //alert('用户点击分享到微博');
+                        },
+                        complete: function (res) {
+                            //alert(JSON.stringify(res));
+                        },
+                        success: function (res) {
+                            //alert('已分享');
+                        },
+                        cancel: function (res) {
+                            //alert('已取消');
+                        },
+                        fail: function (res) {
+                            //alert(JSON.stringify(res));
+                        }
+                    });
+                    wx.onMenuShareQZone({
+                        title: title,
+                        link: link,
+                        imgUrl: imgUrl,
+                        desc: desc,
+                        trigger: function (res) {
+                            //alert('用户点击分享到QZone');
+                        },
+                        complete: function (res) {
+                            //alert(JSON.stringify(res));
+                        },
+                        success: function (res) {
+                            //alert('已分享');
+                        },
+                        cancel: function (res) {
+                            //alert('已取消');
+                        },
+                        fail: function (res) {
+                            //alert(JSON.stringify(res));
+                        }
+                    });
+
+                })
+
+            }, 'json')
+        }
+        if(document.getElementById("resultRadar") != undefined) {
+
+            var part1 = getCookie('part1')
+            var part2 = getCookie('part2')
+            var part3 = getCookie('part3')
+            var part4 = getCookie('part4')
+            var part5 = getCookie('part5')
+            var part6 = getCookie('part6')
+            if (!part1 || !part2 || !part3 || !part4 || !part5 || !part6) {
+                alert(part1 +'_'+part2+'_'+part3+'_'+part4+'_'+part5+'_'+part6)
+                window.location.href = '/p1/'
+                exit;
+            }
+            if (!part2) {
+                window.location.href = '/p1/part2.html'
+                exit;
+            }
+            if (!part3) {
+                window.location.href = '/p1/part3.html'
+                exit;
+            }
+            if (!part4) {
+                window.location.href = '/p1/part4.html'
+                exit;
+            }
+            if (!part5) {
+                window.location.href = '/p1/part5.html'
+                exit;
+            }
+            if (!part6) {
+                window.location.href = '/p1/part6.html'
+                exit;
+            }
+            var radar = new Radar({
+                canvas: '#resultRadar',
+                initData: [part1, part2, part3, part4, part5, part6] // 取值范围是: [1 - 5]
+            });
+
+
+        }
+
+
+    })
+
+</script>
+</body>
+</html>
+
